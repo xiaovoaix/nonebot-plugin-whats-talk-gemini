@@ -255,9 +255,27 @@ async def chat_with_gemini(messages, member_count, first_time=None, last_time=No
                 proxy=wt_proxy if wt_proxy else None,
                 timeout=300,
             ) as client:
+                logger.debug(
+                    f"调用 AI: url={url}, model={data.get('model')}, "
+                    f"payload_keys={list(data.keys())}"
+                )
                 response = await client.post(url, headers=headers, json=data)
+                logger.debug(
+                    f"响应 status={response.status_code}, "
+                    f"content-type={response.headers.get('content-type')}, "
+                    f"body={response.text[:2000]}"
+                )
                 response.raise_for_status()
-                result = response.json()
+                try:
+                    result = response.json()
+                except Exception:
+                    logger.error(
+                        f"响应不是合法 JSON (url={url}, "
+                        f"status={response.status_code}, "
+                        f"content-type={response.headers.get('content-type')}): "
+                        f"body={response.text[:2000]}"
+                    )
+                    raise
 
                 if "choices" in result:
                     content = result["choices"][0]["message"]["content"]
