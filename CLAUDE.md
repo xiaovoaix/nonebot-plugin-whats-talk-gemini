@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-`nonebot-plugin-whats-talk-gemini` — a NoneBot2 plugin (OneBot v11 adapter) that summarises recent group chat via an LLM. Two entry points: on-demand via the `他们在聊什么` / `群友在聊什么` command, and scheduled push via apscheduler cron. Summaries are delivered as OneBot *forward-message nodes* (`send_group_forward_msg`), not plain text, so QQ clients render them as a merged card.
+`nonebot-plugin-whats-talk-gemini` — a NoneBot2 plugin (OneBot v11 adapter) that summarises recent group chat via an LLM. Two entry points: on-demand via any group message matching the regex `总结` (e.g. `群聊总结`, `总结一下`), and scheduled push via apscheduler cron. Summaries are delivered as OneBot *forward-message nodes* (`send_group_forward_msg`), not plain text, so QQ clients render them as a merged card.
 
 ## Commands
 

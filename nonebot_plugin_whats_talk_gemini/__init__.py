@@ -1,7 +1,7 @@
 import asyncio
 
 import httpx
-from nonebot import get_bots, get_plugin_config, on_command, require
+from nonebot import get_bots, get_plugin_config, on_regex, require
 from nonebot.adapters.onebot.v11 import Bot, GroupMessageEvent
 from nonebot.exception import FinishedException
 from nonebot.log import logger
@@ -18,8 +18,8 @@ __plugin_meta__ = PluginMetadata(
     name="他们在聊什么",
     description="分析群聊记录，生成近期讨论话题的总结。",
     usage=(
-        '发送指令"他们在聊什么"或"群友在聊什么"以获取当前群聊的讨论总结。'
-        '插件会定期自动推送群聊讨论总结，推送时间可配置。'
+        "发送包含“总结”二字的消息（如“群聊总结”“总结一下”）即可获取当前群聊的讨论总结。"
+        "插件会定期自动推送群聊讨论总结，推送时间可配置。"
     ),
     type="application",
     homepage="https://github.com/hakunomiko/nonebot-plugin-whats-talk-gemini",
@@ -44,9 +44,8 @@ wt_thinking = plugin_config.wt_thinking
 
 
 # 注册事件响应器
-whats_talk = on_command(
-    "他们在聊什么",
-    aliases={"群友在聊什么"},
+whats_talk = on_regex(
+    r"总结",
     priority=5,
     rule=is_type(GroupMessageEvent),
     block=True,

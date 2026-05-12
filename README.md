@@ -89,7 +89,7 @@ _✨ 分析群聊记录，生成近期讨论话题的总结。 ✨_
 ### 指令表
 | 指令 | 权限 | 需要@ | 范围 | 说明 |
 |:-----:|:----:|:----:|:----:|:----:|
-| 他们在聊什么/群友在聊什么 | 群员 | 否 | 群聊 | 获取当前群聊的讨论总结 |
+| 含“总结”二字的消息（如 群聊总结） | 群员 | 否 | 群聊 | 获取当前群聊的讨论总结 |
 
 ## 🎉 鸣谢
 感谢[大橘](https://github.com/zhiyu1998)提供的prompt以及[插件灵感](https://github.com/zhiyu1998/rconsole-plugin-complementary-set/blob/master/whats-talk-gemini.js)。
