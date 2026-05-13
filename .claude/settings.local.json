@@ -3,7 +3,17 @@
     "allow": [
       "WebFetch(domain:www.python-httpx.org)",
       "WebFetch(domain:github.com)",
-      "WebFetch(domain:api.ikuncode.cc)"
+      "WebFetch(domain:api.ikuncode.cc)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(ruff check *)",
+      "Bash(ruff format *)",
+      "Bash(python -m ruff check .)",
+      "Bash(python -m ruff format --check .)",
+      "Bash(/d/awa/bot/nb/test/.venv/Scripts/python.exe -m ruff check .)",
+      "Bash(/d/awa/bot/nb/test/.venv/Scripts/python.exe -m ruff format --check .)",
+      "Bash(/d/awa/bot/nb/test/.venv/Scripts/python.exe -m pip show ruff)",
+      "Bash(/d/awa/bot/nb/test/.venv/Scripts/python.exe *)"
     ]
   }
 }

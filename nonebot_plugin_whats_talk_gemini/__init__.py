@@ -6,7 +6,7 @@ from nonebot.adapters.onebot.v11 import Bot, GroupMessageEvent
 from nonebot.exception import FinishedException
 from nonebot.log import logger
 from nonebot.plugin import PluginMetadata
-from nonebot.rule import Rule, is_type
+from nonebot.rule import is_type, to_me
 
 require("nonebot_plugin_apscheduler")
 from nonebot_plugin_apscheduler import scheduler
@@ -43,19 +43,10 @@ wt_group_list = plugin_config.wt_group_list
 wt_thinking = plugin_config.wt_thinking
 
 
-# 注册事件响应器
-async def _is_at_bot(event: GroupMessageEvent, bot: Bot) -> bool:
-    self_id = str(bot.self_id)
-    for seg in event.message:
-        if seg.type == "at" and str(seg.data.get("qq", "")) == self_id:
-            return True
-    return False
-
-
 whats_talk = on_regex(
     r"总结",
     priority=5,
-    rule=is_type(GroupMessageEvent) & Rule(_is_at_bot),
+    rule=is_type(GroupMessageEvent) & to_me(),
     block=True,
 )
 
