@@ -1,4 +1,5 @@
 import asyncio
+import re
 
 import httpx
 from nonebot import get_bots, get_plugin_config, on_regex, require
@@ -51,6 +52,14 @@ whats_talk = on_regex(
 )
 
 
+def _sanitize(text: str) -> str:
+    text = re.sub(r"([?&])key=[^&\s'\"]+", r"\1key=***", text)
+    for k in wt_api_keys:
+        if k:
+            text = text.replace(k, "***")
+    return text
+
+
 # 处理命令
 @whats_talk.handle()
 async def handle_whats_talk(bot: Bot, event: GroupMessageEvent):
@@ -80,7 +89,7 @@ async def handle_whats_talk(bot: Bot, event: GroupMessageEvent):
         raise
     except Exception as e:
         logger.error(f"命令执行过程中发生错误: {e!s}")
-        await whats_talk.finish(f"命令执行过程中发生错误，错误信息: {e!s}")
+        await whats_talk.finish(f"命令执行过程中发生错误，错误信息: {_sanitize(str(e))}")
 
 
 # 获取群成员数量
@@ -300,14 +309,14 @@ async def chat_with_gemini(messages, member_count, first_time=None, last_time=No
 
         except httpx.HTTPStatusError as e:
             if e.response.status_code == 429:
-                logger.warning(f"API Key {wt_api_key} 已超出限制，切换到下一个。")
+                logger.warning("某个 API Key 已超出限制，切换到下一个。")
                 continue
             else:
-                logger.error(f"调用 AI 接口失败: {e!s}")
-                raise Exception(f"调用 AI 接口失败，错误信息: {e!s}")
+                logger.error(f"调用 AI 接口失败: {_sanitize(str(e))}")
+                raise Exception(f"调用 AI 接口失败 (HTTP {e.response.status_code})")
         except Exception as e:
-            logger.error(f"发生预料之外的错误: {e!s}")
-            raise Exception(f"发生预料之外的错误，错误信息: {e!s}")
+            logger.error(f"发生预料之外的错误: {_sanitize(str(e))}")
+            raise Exception("调用 AI 接口时发生预料之外的错误")
 
     raise Exception("所有 API Key 均超出限制或调用失败。")
 
@@ -359,9 +368,9 @@ async def push_whats_talk():
                         ],
                     )
                 except Exception as e:
-                    logger.error(f"定时任务处理群 {group_id} 时发生错误: {e!s}")
+                    logger.error(f"定时任务处理群 {group_id} 时发生错误: {_sanitize(str(e))}")
                     await bot.send_group_msg(
                         group_id=group_id,
-                        message=f"命令执行过程中发生错误，错误信息: {e!s}",
+                        message=f"命令执行过程中发生错误，错误信息: {_sanitize(str(e))}",
                     )
                 await asyncio.sleep(2)
