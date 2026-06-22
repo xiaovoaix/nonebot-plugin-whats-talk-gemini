@@ -238,10 +238,13 @@ async def chat_with_gemini(messages, member_count, first_time=None, last_time=No
             url = f"{wt_base_url}/models/{wt_model_name}:generateContent?key={wt_api_key}"
             headers.pop("Authorization", None)
             data = {
+                "systemInstruction": {
+                    "parts": [{"text": prompt}],
+                    "role": "user",
+                },
                 "contents": [
-                    {"parts": [{"text": prompt}], "role": "user"},
                     {"parts": [{"text": "\n".join(compressed_messages)}], "role": "user"},
-                ]
+                ],
             }
 
         else:
